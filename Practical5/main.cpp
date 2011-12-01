@@ -51,11 +51,11 @@ static const int refresh_rate = 25;
 static Light lights[] = 
 {
 	{
-		{ .1f, .1f, .3f, 1.f }, // ambient
-		{ .3f, .3f, .3f, 1.f }, // diffuse
-		{ .1f, .1f, .1f, 1.f }, // specular
-		{ .0f, 1.f, .0f, 1.f }, // postion
-		GL_LIGHT0               // light number
+		{0.6F, 0.6F, 0.6F, 0.6F}, // ambient
+		{1.0F, 1.0F, 1.0F, 1.0F}, // diffuse
+		{1.0F, 1.0F, 1.0F, 1.0F}, // specular
+		{ .0f, 1.f, .0f, 1.f },   // light number
+		GL_LIGHT0
 	},
 	{
 		{0.0F, 0.0F, 0.0F, 1.0F}, // ambient
@@ -68,6 +68,8 @@ static Light lights[] =
 static const int LIGHTS_SIZE = sizeof(lights)/sizeof(Light);
 static int lights_index = 0;
 
+GLUquadricObj *sphere;
+GLuint textureId;
 
 void init_planets(void);
 void init_locations(void);
@@ -75,6 +77,17 @@ void init_locations(void);
 
 void init_planets(void){
 	// All the parameters are in relation to earth.
+	
+	read_jpeg_file("images/earthmapthumb.jpg");
+	textureId =	loadTexture(0, NULL, 200, 100, true);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	sphere = gluNewQuadric();
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluQuadricTexture(sphere, GL_TRUE);
+	gluQuadricNormals(sphere, GLU_SMOOTH);
 	
 	const float earth_distance = 0.9f;
 	const float earth_radius   = 0.06f;
@@ -111,6 +124,7 @@ void display(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glBindTexture(GL_TEXTURE_2D, textureId);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
@@ -493,16 +507,11 @@ int main(int argc, char** argv)
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
 	
+	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+	
 	init_planets();
 	init_locations();
 	
-	char *infilename = "images/test.jpg", *outfilename = "test_out.jpg";
-	
-	/* Try opening a jpeg*/
-	if( read_jpeg_file( infilename ) > 0 ) 
-	{
-		/* then copy it to another file */
-		if( write_jpeg_file( outfilename ) < 0 ) return -1;
-	}	
 	glutMainLoop();
 }

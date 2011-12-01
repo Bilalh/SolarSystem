@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include "libjpeg.h"
+#include "Glut.h"
 
 /* we will be using this uninitialized pointer later to store raw, uncompressd image */
 unsigned char *raw_image = NULL;
@@ -76,68 +77,63 @@ int read_jpeg_file( char *filename )
 	return 1;
 }
 
-/**
- * write_jpeg_file Writes the raw image data stored in the raw_image buffer
- * to a jpeg image with default compression and smoothing options in the file
- * specified by *filename.
- *
- * \returns positive integer if successful, -1 otherwise
- * \param *filename char string specifying the file name to save to
- *
- */
-int write_jpeg_file( char *filename )
+
+
+GLuint loadTexture( int texture_id, unsigned char * data, int width, int height, int wrap )
 {
-	struct jpeg_compress_struct cinfo;
-	struct jpeg_error_mgr jerr;
+	data = raw_image;
+    GLuint texture;
+	// BYTE * data;
+    //FILE * file;
 	
-	/* this is a pointer to one row of image data */
-	JSAMPROW row_pointer[1];
-	FILE *outfile = fopen( filename, "wb" );
+    /*
+	 // open texture data
+	 file = fopen( filename, "rb" );
+	 if ( file == NULL ) return 0;
+	 
+	 // allocate buffer
+	 width = 256;
+	 height = 256;
+	 data = malloc( width * height * 3 );
+	 
+	 // read texture data
+	 fread( data, width * height * 3, 1, file );
+	 fclose( file );
+	 */
 	
-	if ( !outfile )
-	{
-		printf("Error opening output jpeg file %s\n!", filename );
-		return -1;
-	}
-	cinfo.err = jpeg_std_error( &jerr );
-	jpeg_create_compress(&cinfo);
-	jpeg_stdio_dest(&cinfo, outfile);
-
-	/* Setting the parameters of the output file here */
-	cinfo.image_width = width;	
-	cinfo.image_height = height;
-	cinfo.input_components = bytes_per_pixel;
-	cinfo.in_color_space = color_space;
-    /* default compression parameters, we shouldn't be worried about these */
-	jpeg_set_defaults( &cinfo );
-	/* Now do the compression .. */
-	jpeg_start_compress( &cinfo, TRUE );
-	/* like reading a file, this time write one row at a time */
-	while( cinfo.next_scanline < cinfo.image_height )
-	{
-		row_pointer[0] = &raw_image[ cinfo.next_scanline * cinfo.image_width *  cinfo.input_components];
-		jpeg_write_scanlines( &cinfo, row_pointer, 1 );
-	}
-	/* similar to read file, clean up after we're done compressing */
-	jpeg_finish_compress( &cinfo );
-	jpeg_destroy_compress( &cinfo );
-	fclose( outfile );
-	/* success code is 1! */
-	return 1;
+    // allocate a texture name
+    glGenTextures( texture_id, &texture );
+	
+    // select our current texture
+    glBindTexture( GL_TEXTURE_2D, texture );
+	
+	
+    // select modulate to mix texture with color for shading
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+	
+	
+    // when texture area is small, bilinear filter the closest mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					GL_LINEAR_MIPMAP_NEAREST );
+    // when texture area is large, bilinear filter the first mipmap
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	
+	
+    // if wrap is true, the texture wraps over at the edges (repeat)
+    //       ... false, the texture ends at the edges (clamp)
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+					wrap ? GL_REPEAT : GL_CLAMP );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+					wrap ? GL_REPEAT : GL_CLAMP );
+	
+	
+    // build our texture mipmaps
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data );
+	
+	
+    // free buffer
+    free( data );
+	
+    return texture;
 }
-//
-//int main()
-//{
-//	char *infilename = "images/test.jpg", *outfilename = "test_out.jpg";
-//
-//	/* Try opening a jpeg*/
-//	if( read_jpeg_file( infilename ) > 0 ) 
-//	{
-//		/* then copy it to another file */
-//		if( write_jpeg_file( outfilename ) < 0 ) return -1;
-//	}
-//	else return -1;
-//	return 0;
-//}
-
 

@@ -10,6 +10,7 @@
 
 // For controlling the speed of the bodies 
 float Body::speed_multiplier = 1;
+extern GLUquadricObj *sphere;
 
 // constructors
 Body::Body(MaterialList* materials, float radius, float offset, float speed, float angle):
@@ -17,6 +18,7 @@ Body::Body(MaterialList* materials, float radius, float offset, float speed, flo
 {
 	x = cosf((angle) /180.f * (float)M_PI ) * (radius+offset +0.05f);
 	z = sinf((angle) /180.f * (float)M_PI ) * (radius+offset+ 0.05f);
+
 }
 
 Planet::Planet(MaterialList* materials, float radius, float offset, float speed, float angle, Body* moon):
@@ -35,8 +37,9 @@ void Body::draw() const
 	if (orbit) draw_orbit();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glTranslatef(offset, 0, 0);
-	draw_material();
-	glutSolidSphere(radius, 60, 60);
+//	draw_material();
+//	glutSolidSphere(radius, 60, 60);
+	gluSphere(sphere, radius, 20, 20);
 	draw_other();
 	
 	glPopMatrix();
@@ -49,11 +52,11 @@ void Body::draw_material() const
 
 void Star::draw_material() const
 {
-	if (show_emission) {
-		materials->current()->draw_with_emission(emission);
-	} else {
-		materials->current()->draw();
-	}
+//	if (show_emission) {
+//		materials->current()->draw_with_emission(emission);
+//	} else {
+//		materials->current()->draw();
+//	}
 }
 
 void Body::draw_other() const {}
