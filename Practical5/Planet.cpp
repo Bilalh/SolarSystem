@@ -33,7 +33,7 @@ Star::Star(MaterialList* materials, const GLfloat *emission, float radius,bool s
 void Body::draw() const
 {
 	glPushMatrix();
-	glColor3fv(materials->current_colour());
+//	glColor3fv(materials->current_colour());
 	if (orbit) draw_orbit();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glTranslatef(offset, 0, 0);
@@ -82,8 +82,8 @@ static const GLfloat orbit_emission[] = {0.0F, 0.4F, 0.6F, 0.3F};
 
 void Body::draw_orbit() const
 {
-	Material::blue()->draw_with_emission(orbit_emission);
-	glColor3fv(Colour::white());
+//	Material::white()->draw_with_emission(orbit_emission);
+//	glColor3fv(Colour::blue());
 	glBegin(GL_LINE_LOOP);
 	int slices = 40;
 	for (int i = 0; i < slices; ++i) {
@@ -91,13 +91,6 @@ void Body::draw_orbit() const
 		glVertex3f(offset * sinf(value), 0.0f, offset * cosf(value));
 	}
 	glEnd();
-
-	// Old method, look better, but orbits are too thick.
-//	glPushMatrix();
-//		glRotatef(90, 1, 0, 0);
-//		glutSolidTorus(0.01, offset, 100, 100);
-//	glPopMatrix();
-
 }
 
 // State changing methods
@@ -137,8 +130,8 @@ void Star::toggle_emission()
 }
 
 
-Ring::Ring(float inner_ring, float outer_ring, float rotate_angle):
-	inner_ring(inner_ring), outer_ring(outer_ring), rotate_angle(rotate_angle)
+Ring::Ring(Texture* texture, float inner_ring, float outer_ring, float rotate_angle):
+	inner_ring(inner_ring), outer_ring(outer_ring), rotate_angle(rotate_angle),texture(texture)
 {}
 
 
@@ -146,6 +139,7 @@ void Ring::draw() const
 {
 	glPushMatrix();
 	glRotatef(rotate_angle, 1.0f, 0.0f, 0.0f);
+	texture->bind();
 	gluDisk(sphere, inner_ring, outer_ring, 16, 20);
 	glPopMatrix();
 }

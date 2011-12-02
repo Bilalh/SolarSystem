@@ -71,25 +71,12 @@ static const int LIGHTS_SIZE = sizeof(lights)/sizeof(Light);
 static int lights_index = 0;
 
 GLUquadricObj *sphere;
-Texture *earth;
-Texture *jupiter;
-
 
 void init_planets(void);
 void init_locations(void);
 
 
 void init_planets(void){
-	// All the parameters are in relation to earth.
-
-//	read_jpeg_file("images/earthmap1k.jpg");
-//	textureId =	loadTexture(0, NULL, 1000, 500, true);
-	
-//	jupiter = new Texture("images/jupitermap.jpg", 1000, 500,true);
-//	earth = new Texture("images/earthmap.jpg", 1000, 500,true);
-//	earth->create_texture();
-//	earth = new Texture("images/moonmap.jpg"    , 1000, 500,true);
-
 	
 	sphere = gluNewQuadric();
 	gluQuadricDrawStyle(sphere, GLU_FILL);
@@ -97,7 +84,8 @@ void init_planets(void){
 	gluQuadricNormals(sphere, GLU_SMOOTH);
 	gluQuadricTexture(sphere,GL_TRUE);
 	
-	
+
+	// All the parameters are in relation to earth.
 	const float earth_distance = 0.9f;
 	const float earth_radius   = 0.06f;
 	const float earth_speed    = 1.0f;
@@ -117,11 +105,15 @@ void init_planets(void){
 
 	planets.push_back(new Planet(Material::all_materials(5), 2.5f*earth_radius,  1.5f*earth_distance, 0.4f*earth_speed));
 	Planet *saturn =  new Planet(Material::all_materials(6), 2.0f*earth_radius,  1.9f*earth_distance, 0.3f*earth_speed);
-	saturn->set_ring( new Ring( 2.3f*earth_radius, 2.7f*earth_radius,-45));	                                                 
+	
+	Texture *t = new Texture("images/saturnringcolor.jpg", 915, 64);
+	t->create_texture();
+	
+	saturn->set_ring( new Ring(t, 2.3f*earth_radius, 2.7f*earth_radius,-45));	                                                 
 	planets.push_back(saturn);                                                                       
                                                                                                      
 	Planet *uranus = new Planet(Material::all_materials(7),  1.7f*earth_radius,  2.3f*earth_distance, 0.2f*earth_speed);
-	uranus->set_ring(new Ring(2.1f*earth_radius, 2.4f*earth_radius,0));                                                       
+	uranus->set_ring(new Ring(t,2.1f*earth_radius, 2.4f*earth_radius,0));                                                       
 	planets.push_back(uranus);                                                                        
                                                                                                       
 	planets.push_back(new Planet(Material::all_materials(8), 1.5f*earth_radius,  2.6f*earth_distance, 0.1f*earth_speed));
@@ -140,7 +132,7 @@ void display(void)
 	if (selected){
 		current.eyeX = planets[selected_planet]->x;
 		current.eyeZ = -planets[selected_planet]->z;
-		current.eyeY = selected_planet > 3 ? 0.2 : 0.1;
+		current.eyeY = selected_planet > 3 ? 0.2 : 0.15;
 	}
 	
 	gluLookAt(current.eyeX,    current.eyeY,    current.eyeZ, 
@@ -516,9 +508,12 @@ int main(int argc, char** argv)
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
 	
+	
 	glEnable(GL_TEXTURE_2D);
 //	glDisable(GL_CULL_FACE);
 
+	
+	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	

@@ -68,9 +68,10 @@ class Ring{
 	const float inner_ring;
 	const float outer_ring;
 	const float rotate_angle;
-
+	Texture *texture;
+	
 public:
-	Ring(float inner_ring, float outer_ring, float rotate_angle=0);
+	Ring(Texture *texture, float inner_ring, float outer_ring, float rotate_angle=0);
 	virtual void draw() const;
 };
 
