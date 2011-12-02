@@ -14,7 +14,7 @@ extern GLUquadricObj *sphere;
 
 // constructors
 Body::Body(MaterialList* materials, float radius, float offset, float speed, float angle):
-	materials(materials), radius(radius), offset(offset), speed(speed), angle(angle), orbit(false)
+	materials(materials), radius(radius), offset(offset), speed(speed), angle(angle), orbit(false), spin_angle(0)
 {
 	x = cosf((angle) /180.f * (float)M_PI ) * (radius+offset +0.05f);
 	z = sinf((angle) /180.f * (float)M_PI ) * (radius+offset+ 0.05f);
@@ -38,10 +38,16 @@ void Body::draw() const
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glTranslatef(offset, 0, 0);
 //	draw_material();
-//	glutSolidSphere(radius, 60, 60);
-	gluSphere(sphere, radius, 20, 20);
-	draw_other();
 	
+	
+	// Make planet spin 
+	glPushMatrix();
+	glRotatef( spin_angle, 0.0f, 1.0f, 0.0f );
+	glRotatef( -90.0f, 1.0f, 0.0f, 0.0f );
+	gluSphere(sphere, radius, 20, 20);
+	glPopMatrix();
+	
+	draw_other();
 	glPopMatrix();
 }
 
@@ -110,6 +116,7 @@ void Planet::update()
 void Body::update()
 {
 	angle+=speed * speed_multiplier;
+	spin_angle+=4.f;
 	x = cosf((angle) /180.f * (float)M_PI ) * (radius+offset +0.05f);
 	z = sinf((angle) /180.f * (float)M_PI ) * (radius+offset+ 0.05f);
 }

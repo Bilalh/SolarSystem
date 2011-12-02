@@ -20,7 +20,8 @@ protected:
 	float speed;
 	virtual void draw_other() const;
 	virtual void draw_material() const;	
-
+	float spin_angle;
+	
 public:	
 	static float speed_multiplier;
 	float x;

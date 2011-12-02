@@ -84,7 +84,9 @@ void init_planets(void){
 //	read_jpeg_file("images/earthmap1k.jpg");
 //	textureId =	loadTexture(0, NULL, 1000, 500, true);
 	
-	earth = new Texture("images/earthmap1k.jpg", 1000, 500,true);
+	earth = new Texture("images/jupitermap.jpg", 1000, 500,true);
+//	earth = new Texture("images/earthmap1k.jpg", 1000, 500,true);
+	
 	sphere = gluNewQuadric();
 	gluQuadricDrawStyle(sphere, GLU_FILL);
 	gluQuadricTexture(sphere, GL_TRUE);
