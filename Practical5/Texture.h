@@ -15,12 +15,11 @@ class Texture {
 	char *filename;
 	int width, height;
 	bool wrap;
-	
-	static GLuint texture_counter;
-	
+		
 public:
 	GLuint texture_id;
 	Texture(char *filename, int width, int height,  bool wrap=true);
+	void create_texture();
 	void bind() const;
 };
 

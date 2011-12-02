@@ -17,7 +17,7 @@ extern "C" {
 
 unsigned char *read_jpeg_file( char *filename );
 
-GLuint loadTexture( int texture_id, unsigned char * data, int width, int height, int wrap );
+GLuint loadTexture( int number, unsigned char * data, int width, int height, int wrap );
 
 
 #ifdef __cplusplus

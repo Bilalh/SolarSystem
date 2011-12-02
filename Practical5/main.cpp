@@ -72,6 +72,7 @@ static int lights_index = 0;
 
 GLUquadricObj *sphere;
 Texture *earth;
+Texture *jupiter;
 
 
 void init_planets(void);
@@ -84,14 +85,18 @@ void init_planets(void){
 //	read_jpeg_file("images/earthmap1k.jpg");
 //	textureId =	loadTexture(0, NULL, 1000, 500, true);
 	
-//	earth = new Texture("images/jupitermap.jpg", 1000, 500,true);
-	earth = new Texture("images/earthmap1k.jpg", 1000, 500,true);
+//	jupiter = new Texture("images/jupitermap.jpg", 1000, 500,true);
+//	earth = new Texture("images/earthmap.jpg", 1000, 500,true);
+//	earth->create_texture();
+//	earth = new Texture("images/moonmap.jpg"    , 1000, 500,true);
+
 	
 	sphere = gluNewQuadric();
 	gluQuadricDrawStyle(sphere, GLU_FILL);
 	gluQuadricTexture(sphere, GL_TRUE);
 	gluQuadricNormals(sphere, GLU_SMOOTH);
 	gluQuadricTexture(sphere,GL_TRUE);
+	
 	
 	const float earth_distance = 0.9f;
 	const float earth_radius   = 0.06f;
@@ -112,11 +117,11 @@ void init_planets(void){
 
 	planets.push_back(new Planet(Material::all_materials(5), 2.5f*earth_radius,  1.5f*earth_distance, 0.4f*earth_speed));
 	Planet *saturn =  new Planet(Material::all_materials(6), 2.0f*earth_radius,  1.9f*earth_distance, 0.3f*earth_speed);
-	saturn->set_ring( new Ring(0.02f, 2.7f*earth_radius,-45));	                                                 
+	saturn->set_ring( new Ring( 2.3f*earth_radius, 2.7f*earth_radius,-45));	                                                 
 	planets.push_back(saturn);                                                                       
                                                                                                      
 	Planet *uranus = new Planet(Material::all_materials(7),  1.7f*earth_radius,  2.3f*earth_distance, 0.2f*earth_speed);
-	uranus->set_ring(new Ring(0.01f, 2.6f*earth_radius,0));                                                       
+	uranus->set_ring(new Ring(2.1f*earth_radius, 2.4f*earth_radius,0));                                                       
 	planets.push_back(uranus);                                                                        
                                                                                                       
 	planets.push_back(new Planet(Material::all_materials(8), 1.5f*earth_radius,  2.6f*earth_distance, 0.1f*earth_speed));
@@ -128,8 +133,7 @@ void display(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-//	glBindTexture(GL_TEXTURE_2D, textureId);
-	earth->bind();
+//	earth->bind();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	

@@ -6,8 +6,10 @@
 #ifndef MATERIAL_HEADER__
 #define MATERIAL_HEADER__
 
-#include "Glut.h"
 #include <stddef.h>
+
+#include "Glut.h"
+#include "Texture.h"
 
 // Classes that store data on Materials. Inculdes methods to return predefined Materials 
 
@@ -37,16 +39,19 @@ struct Material{
 };
 
 struct MaterialList{
-	const Material* list;
+	const Material* materials;
 	const GLfloat (*colours)[3];
+	const Texture* textures;
+	
 	size_t length;
 	size_t index;
 	
-	const Material* current() const;
-	const GLfloat* current_colour() const;
+	const Texture*  current_texture() const; 
+	const Material* current_materials() const;
+	const GLfloat*  current_colour() const;
 	void next();
 	
-	MaterialList(const Material* list, const GLfloat (*colours)[3],  size_t length, size_t index=0);
+	MaterialList(const Material* materials, const Texture*  textures, const GLfloat (*colours)[3],   size_t length, size_t index=0);
 };
 
 struct Light{

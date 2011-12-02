@@ -44,16 +44,16 @@ void Body::draw() const
 	glPushMatrix();
 	glRotatef( spin_angle, 0.0f, 1.0f, 0.0f );
 	glRotatef( 90.0f, 1.0f, 0.0f, 0.0f );
+	materials->current_texture()->bind();
 	gluSphere(sphere, radius, 20, 20);
 	glPopMatrix();
-	
 	draw_other();
 	glPopMatrix();
 }
 
 void Body::draw_material() const
 {
-	materials->current()->draw();
+	materials->current_materials()->draw();
 }
 
 void Star::draw_material() const
@@ -146,6 +146,6 @@ void Ring::draw() const
 {
 	glPushMatrix();
 	glRotatef(rotate_angle, 1.0f, 0.0f, 0.0f);
-	glutSolidTorus(inner_ring, outer_ring, 16, 20);
+	gluDisk(sphere, inner_ring, outer_ring, 16, 20);
 	glPopMatrix();
 }

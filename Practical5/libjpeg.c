@@ -79,7 +79,7 @@ unsigned char *read_jpeg_file( char *filename )
 
 
 
-GLuint loadTexture( int texture_id, unsigned char * data, int width, int height, int wrap )
+GLuint loadTexture( int number, unsigned char * data, int width, int height, int wrap )
 {
     GLuint texture;
 	// BYTE * data;
@@ -101,7 +101,7 @@ GLuint loadTexture( int texture_id, unsigned char * data, int width, int height,
 	 */
 	
     // allocate a texture name
-    glGenTextures( texture_id, &texture );
+    glGenTextures( number, &texture );
 	
     // select our current texture
     glBindTexture( GL_TEXTURE_2D, texture );

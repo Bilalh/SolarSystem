@@ -183,13 +183,13 @@ const GLfloat* Colour::grey()
 	return colours[2];
 }
 
-MaterialList::MaterialList(const Material* list, const GLfloat (*colours)[3], size_t length, size_t index)
-	:list(list),length(length),index(index),colours(colours)
+MaterialList::MaterialList(const Material* materials, const Texture*  textures, const GLfloat (*colours)[3],   size_t length, size_t index):
+materials(materials), textures(textures), length(length),index(index),colours(colours)
 {}
 
-const Material* MaterialList::current() const
+const Material* MaterialList::current_materials() const
 {
-	return &list[index];
+	return &materials[index];
 }
 
 const GLfloat* MaterialList::current_colour() const
@@ -203,7 +203,34 @@ void MaterialList::next()
 	index = (index + 1) % length;
 }
 
+static Texture textures[] ={
+	Texture("images/sunmap.jpg"     , 1000, 500,true),
+	Texture("images/mercurymap.jpg" , 1000, 500,true),
+	Texture("images/venusmap.jpg"   , 1000, 500,true),
+	Texture("images/earthmap.jpg"   , 1000, 500,true),
+	Texture("images/mars.jpg"       , 1000, 500,true),
+	Texture("images/jupitermap.jpg" , 1000, 500,true),
+	Texture("images/saturnmap.jpg"  , 1000, 500,true),
+	Texture("images/uranusmap.jpg"  , 1000, 500,true),
+	Texture("images/neptunemap.jpg" , 1000, 500,true),
+	//	Texture("images/moonmap.jpg"    , 1000, 500,true),
+};
+
+const Texture* MaterialList::current_texture() const
+{
+	return &textures[index];
+}
+
+static bool textures_initialised = false;
+
 MaterialList* Material::all_materials(int index)
 {
-	return new MaterialList(materials,colours,sizeof(materials)/sizeof(Material),index);
+	if (!textures_initialised){
+		for (int i =0; i < sizeof(textures)/sizeof(Texture); ++i) {
+			textures[i].create_texture();
+		}
+		textures_initialised=true;
+	}
+	
+	return new MaterialList(materials,textures, colours,sizeof(materials)/sizeof(Material),index);
 }
