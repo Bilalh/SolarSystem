@@ -43,7 +43,7 @@ void Body::draw() const
 	// Make planet spin 
 	glPushMatrix();
 	glRotatef( spin_angle, 0.0f, 1.0f, 0.0f );
-	glRotatef( -90.0f, 1.0f, 0.0f, 0.0f );
+	glRotatef( 90.0f, 1.0f, 0.0f, 0.0f );
 	gluSphere(sphere, radius, 20, 20);
 	glPopMatrix();
 	
