@@ -4,8 +4,8 @@
 #include "libjpeg.h"
 #include "Glut.h"
 
-/* we will be using this uninitialized pointer later to store raw, uncompressd image */
-unsigned char *raw_image = NULL;
+///* we will be using this uninitialized pointer later to store raw, uncompressd image */
+//unsigned char *raw_image = NULL;
 
 /* dimensions of the image we want to write */
 int width = 1600;
@@ -22,7 +22,7 @@ int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
  *
  */
 
-int read_jpeg_file( char *filename )
+unsigned char *read_jpeg_file( char *filename )
 {
 	/* these are standard libjpeg structures for reading(decompression) */
 	struct jpeg_decompress_struct cinfo;
@@ -37,7 +37,7 @@ int read_jpeg_file( char *filename )
 	if ( !infile )
 	{
 		printf("Error opening jpeg file %s\n!", filename );
-		return -1;
+		return NULL;
 	}
 	/* here we set up the standard libjpeg error handler */
 	cinfo.err = jpeg_std_error( &jerr );
@@ -58,7 +58,7 @@ int read_jpeg_file( char *filename )
 	jpeg_start_decompress( &cinfo );
 
 	/* allocate memory to hold the uncompressed image */
-	raw_image = (unsigned char*)malloc( cinfo.output_width*cinfo.output_height*cinfo.num_components );
+	unsigned char* raw_image = (unsigned char*)malloc( cinfo.output_width*cinfo.output_height*cinfo.num_components );
 	/* now actually read the jpeg into the raw buffer */
 	row_pointer[0] = (unsigned char *)malloc( cinfo.output_width*cinfo.num_components );
 	/* read one scan line at a time */
@@ -74,14 +74,13 @@ int read_jpeg_file( char *filename )
 	free( row_pointer[0] );
 	fclose( infile );
 	/* yup, we succeeded! */
-	return 1;
+	return raw_image;
 }
 
 
 
 GLuint loadTexture( int texture_id, unsigned char * data, int width, int height, int wrap )
 {
-	data = raw_image;
     GLuint texture;
 	// BYTE * data;
     //FILE * file;
@@ -130,9 +129,6 @@ GLuint loadTexture( int texture_id, unsigned char * data, int width, int height,
     // build our texture mipmaps
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data );
 	
-	
-    // free buffer
-    free( data );
 	
     return texture;
 }

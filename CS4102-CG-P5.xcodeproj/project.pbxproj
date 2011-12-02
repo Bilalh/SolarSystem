@@ -13,6 +13,7 @@
 		925AC7631488129E00485591 /* Planet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92C47EE514869D1600C0E377 /* Planet.cpp */; };
 		925AC7641488129E00485591 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92C47EE614869D1600C0E377 /* main.cpp */; };
 		925AC7661488129F00485591 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92C47EE814869D1600C0E377 /* Material.cpp */; };
+		925AC76E14884AD900485591 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 925AC76C14884AD800485591 /* Texture.cpp */; };
 		92C47EE214869C4900C0E377 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C47EE114869C4900C0E377 /* GLUT.framework */; };
 		92C47EE414869C5200C0E377 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C47EE314869C5200C0E377 /* OpenGL.framework */; };
 /* End PBXBuildFile section */
@@ -43,7 +44,8 @@
 		925AC75314880CEC00485591 /* libjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libjpeg.dylib; sourceTree = "<group>"; };
 		925AC76014880FA500485591 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = images; path = Practical5/images; sourceTree = "<group>"; };
 		925AC762148811D400485591 /* libjpeg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libjpeg.h; sourceTree = "<group>"; };
-		925AC76B1488333100485591 /* s.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = s.cpp; sourceTree = "<group>"; };
+		925AC76C14884AD800485591 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
+		925AC76D14884AD900485591 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
 		92790B8214783B4400588E53 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/GLUT.framework; sourceTree = DEVELOPER_DIR; };
 		92790B8414783B4D00588E53 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = SDKs/MacOSX10.6.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		92C47ED014869C0C00C0E377 /* Practical5 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Practical5; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +124,6 @@
 		92C47ED214869C0C00C0E377 /* Practical5 */ = {
 			isa = PBXGroup;
 			children = (
-				925AC76B1488333100485591 /* s.cpp */,
 				925AC737148808FD00485591 /* libjpeg.c */,
 				92C47EE514869D1600C0E377 /* Planet.cpp */,
 				92C47EE614869D1600C0E377 /* main.cpp */,
@@ -132,6 +133,8 @@
 				92C47EEA14869D1600C0E377 /* Location.h */,
 				92C47EEB14869D1600C0E377 /* Glut.h */,
 				925AC762148811D400485591 /* libjpeg.h */,
+				925AC76C14884AD800485591 /* Texture.cpp */,
+				925AC76D14884AD900485591 /* Texture.h */,
 			);
 			path = Practical5;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 				925AC7641488129E00485591 /* main.cpp in Sources */,
 				925AC7661488129F00485591 /* Material.cpp in Sources */,
 				925AC7391488090A00485591 /* libjpeg.c in Sources */,
+				925AC76E14884AD900485591 /* Texture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

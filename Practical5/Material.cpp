@@ -183,8 +183,8 @@ const GLfloat* Colour::grey()
 	return colours[2];
 }
 
-MaterialList::MaterialList(const Material* list, const GLfloat (*colours)[3], size_t length, size_t index):
-list(list),length(length),index(index),colours(colours)
+MaterialList::MaterialList(const Material* list, const GLfloat (*colours)[3], size_t length, size_t index)
+	:list(list),length(length),index(index),colours(colours)
 {}
 
 const Material* MaterialList::current() const
