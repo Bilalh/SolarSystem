@@ -1,10 +1,6 @@
 //
 //  Location.h
 //  CS4102-CG-P4
-//
-//  Created by Bilal Syed Hussain on 24/11/2011.
-//  Copyright 2011 St. Andrews KY16 9XW. All rights reserved.
-//
 
 // Stores a location. 
 

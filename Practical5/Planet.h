@@ -1,6 +1,6 @@
 //
 //  Planet.h
-//  Practical4
+//  CS4102-CG-P4
 
 
 #ifndef PLANET_H

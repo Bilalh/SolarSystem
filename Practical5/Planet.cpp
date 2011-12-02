@@ -1,6 +1,6 @@
 //
 //  Planet.cpp
-//  Practical4
+//  CS4102-CG-P4
 
 #include <math.h>
 

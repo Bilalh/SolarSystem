@@ -1,7 +1,6 @@
 //
 //  main.cpp
-//  Practical4
-//
+//  CS4102-CG-P4
 
 // C
 #include <stdio.h>
