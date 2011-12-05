@@ -4,25 +4,10 @@
 #include "libjpeg.h"
 #include "Glut.h"
 
-///* we will be using this uninitialized pointer later to store raw, uncompressd image */
-//unsigned char *raw_image = NULL;
+// Based of 
 
-/* dimensions of the image we want to write */
-int width = 1600;
-int height = 1200;
-int bytes_per_pixel = 3;   /* or 1 for GRACYSCALE images */
-int color_space = JCS_RGB; /* or JCS_GRAYSCALE for grayscale images */
-
-/**
- * read_jpeg_file Reads from a jpeg file on disk specified by filename and saves into the 
- * raw_image buffer in an uncompressed format.
- * 
- * \returns positive integer if successful, -1 otherwise
- * \param *filename char string specifying the file name to read from
- *
- */
-
-unsigned char *read_jpeg_file( char *filename )
+// Read a jpeg from file and return the data in a mallo'ed buffer
+unsigned char *load_jpeg(const char *filename)
 {
 	/* these are standard libjpeg structures for reading(decompression) */
 	struct jpeg_decompress_struct cinfo;
@@ -47,20 +32,13 @@ unsigned char *read_jpeg_file( char *filename )
 	jpeg_stdio_src( &cinfo, infile );
 	/* reading the image header which contains image information */
 	jpeg_read_header( &cinfo, TRUE );
-	/* Uncomment the following to output image information, if needed. */
-	/*--
-	printf( "JPEG File Information: \n" );
-	printf( "Image width and height: %d pixels and %d pixels.\n", cinfo.image_width, cinfo.image_height );
-	printf( "Color components per pixel: %d.\n", cinfo.num_components );
-	printf( "Color space: %d.\n", cinfo.jpeg_color_space );
-	--*/
+
 	/* Start decompression jpeg here */
 	jpeg_start_decompress( &cinfo );
 
-	/* allocate memory to hold the uncompressed image */
 	unsigned char* raw_image = (unsigned char*)malloc( cinfo.output_width*cinfo.output_height*cinfo.num_components );
-	/* now actually read the jpeg into the raw buffer */
 	row_pointer[0] = (unsigned char *)malloc( cinfo.output_width*cinfo.num_components );
+
 	/* read one scan line at a time */
 	while( cinfo.output_scanline < cinfo.image_height )
 	{
@@ -73,35 +51,18 @@ unsigned char *read_jpeg_file( char *filename )
 	jpeg_destroy_decompress( &cinfo );
 	free( row_pointer[0] );
 	fclose( infile );
-	/* yup, we succeeded! */
+	
 	return raw_image;
 }
 
 
-
-GLuint loadTexture( int number, unsigned char * data, int width, int height, int wrap )
+// Loads a texture from data load load_jpeg
+GLuint load_texture(unsigned char * data, int width, int height, int wrap )
 {
     GLuint texture;
-	// BYTE * data;
-    //FILE * file;
-	
-    /*
-	 // open texture data
-	 file = fopen( filename, "rb" );
-	 if ( file == NULL ) return 0;
-	 
-	 // allocate buffer
-	 width = 256;
-	 height = 256;
-	 data = malloc( width * height * 3 );
-	 
-	 // read texture data
-	 fread( data, width * height * 3, 1, file );
-	 fclose( file );
-	 */
-	
+
     // allocate a texture name
-    glGenTextures( number, &texture );
+    glGenTextures( 1, &texture );
 	
     // select our current texture
     glBindTexture( GL_TEXTURE_2D, texture );
@@ -128,7 +89,6 @@ GLuint loadTexture( int number, unsigned char * data, int width, int height, int
 	
     // build our texture mipmaps
     gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data );
-	
 	
     return texture;
 }

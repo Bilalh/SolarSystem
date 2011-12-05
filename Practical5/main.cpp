@@ -179,6 +179,7 @@ void reshape (int w, int h)
 }
 
 
+// based of code from the OpenGL Programming Guide (Version 1.1)
 void process_hits(int button,GLint hits, GLuint buffer[])
 {
 	GLuint ii, jj, *ptr;
@@ -210,6 +211,7 @@ void process_hits(int button,GLint hits, GLuint buffer[])
 	glutPostRedisplay();
 }
 
+// based of code from the OpenGL Programming Guide (Version 1.1)
 #define BUFSIZE 128
 void mouse(int button, int state, int x, int y)
 {

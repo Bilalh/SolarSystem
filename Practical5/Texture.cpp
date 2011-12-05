@@ -5,14 +5,14 @@
 #include "libjpeg.h"
 
 
-Texture::Texture(char *filename, int width, int height,  bool wrap)
+Texture::Texture(const char *filename, int width, int height,  bool wrap)
 	:filename(filename), width(width), height(height), wrap(wrap)
 {}
 
 void Texture::create_texture()
 {
-	unsigned char* data = read_jpeg_file(filename);
-	texture_id =loadTexture(1,data, width, height, wrap);
+	unsigned char* data = load_jpeg(filename);
+	texture_id =load_texture(data, width, height, wrap);
 	free(data);
 }
 

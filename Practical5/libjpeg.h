@@ -15,9 +15,11 @@ extern "C" {
 #endif
 #include <jpeglib.h>
 
-unsigned char *read_jpeg_file( char *filename );
+// Read a jpeg from file and return the data in a mallo'ed buffer
+unsigned char *load_jpeg(const char *filename);
 
-GLuint loadTexture( int number, unsigned char * data, int width, int height, int wrap );
+// Loads a texture from data load load_jpeg
+GLuint load_texture(unsigned char * data, int width, int height, int wrap );
 
 
 #ifdef __cplusplus
