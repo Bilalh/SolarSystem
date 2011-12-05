@@ -4,7 +4,7 @@
 #include "libjpeg.h"
 #include "Glut.h"
 
-// Based of 
+// Based of jpeg.c from "pub.flexaspect.com/jpeg.c"
 
 // Read a jpeg from file and return the data in a mallo'ed buffer
 unsigned char *load_jpeg(const char *filename)

@@ -21,21 +21,15 @@
 #include "Material.h"
 #include "Location.h"
 #include "Texture.h"
+#include "SolarSystem.h"
 
+// Contains the objects in space
+SolarSystem *solar_system;
 
-// The objects in space
-static Star* sun;
-static std::vector<Planet*> planets;
-
-static int selected_planet = 0; // The currently select planet. 
-static bool moving = false;     // True if planets are moving.
 static bool lighting = true;    // True if lighting is turned on.
-static bool selected =false;    // True if the planets are moving.
-
 static float ratio = 1;         // The current aspect radio
 
 GLenum render_mode = GL_RENDER; // Which mode we are in (used for picking).
-
 
 // Stores the predefined loctions.
 static const int LOCATION_SIZE = 4;
@@ -69,27 +63,22 @@ static Light lights[] =
 static const int LIGHTS_SIZE = sizeof(lights)/sizeof(Light);
 static int lights_index = 0;
 
-GLUquadricObj *sphere;
 
-void init_planets(void);
+void init_solar_system(void);
 void init_locations(void);
 
+void init_solar_system(void){
 
-void init_planets(void){
 	
-	sphere = gluNewQuadric();
-	gluQuadricDrawStyle(sphere, GLU_FILL);
-	gluQuadricTexture(sphere, GL_TRUE);
-	gluQuadricNormals(sphere, GLU_SMOOTH);
-	gluQuadricTexture(sphere,GL_TRUE);
-	
+	static Star* sun;
+	static std::vector<Planet*> planets;
 
+	
 	// All the parameters are in relation to earth.
 	const float earth_distance = 0.9f;
 	const float earth_radius   = 0.06f;
 	const float earth_speed    = 1.0f;
 	
-	Body *moon = new Body(Material::all_materials(0), 0.025f, 0.1f, 1.f);
 	GLfloat *sun_emission = new GLfloat[4];
 	sun_emission[0] = .7f; 
 	sun_emission[1] = .4f; 
@@ -99,23 +88,30 @@ void init_planets(void){
 	
 	planets.push_back(new Planet(Material::all_materials(1), 0.5f*earth_radius,  0.4f*earth_distance, 2.0f*earth_speed));
 	planets.push_back(new Planet(Material::all_materials(2), 0.9f*earth_radius,  0.7f*earth_distance, 1.5f*earth_speed));
-	planets.push_back(new Planet(Material::all_materials(3),      earth_radius,       earth_distance,      earth_speed, 0, moon));
+	
+	Planet *earth = new Planet(Material::all_materials(3),      earth_radius,       earth_distance,      earth_speed);
+	earth->add_moon(new Body(Material::all_materials(0), 0.025f, 0.1f, 1.f));
+	planets.push_back(earth);
+	
 	planets.push_back(new Planet(Material::all_materials(4), 0.7f*earth_radius,  1.2f*earth_distance, 0.7f*earth_speed));
-
 	planets.push_back(new Planet(Material::all_materials(5), 2.5f*earth_radius,  1.5f*earth_distance, 0.4f*earth_speed));
+	
 	Planet *saturn =  new Planet(Material::all_materials(6), 2.0f*earth_radius,  1.9f*earth_distance, 0.3f*earth_speed);
 	
 	Texture *t = new Texture("images/saturnringcolor.jpg", 915, 64);
 	t->create_texture();
-	
-	saturn->set_ring( new Ring(t, 2.3f*earth_radius, 2.7f*earth_radius,-45));	                                                 
+	saturn->add_drawables(new Ring(t, 2.3f*earth_radius, 2.7f*earth_radius,-45));
+
 	planets.push_back(saturn);                                                                       
                                                                                                      
 	Planet *uranus = new Planet(Material::all_materials(7),  1.7f*earth_radius,  2.3f*earth_distance, 0.2f*earth_speed);
-	uranus->set_ring(new Ring(t,2.1f*earth_radius, 2.4f*earth_radius,0));                                                       
+	uranus->add_drawables(new Ring(t,2.1f*earth_radius, 2.4f*earth_radius,0));                                                       
 	planets.push_back(uranus);                                                                        
                                                                                                       
 	planets.push_back(new Planet(Material::all_materials(8), 1.5f*earth_radius,  2.6f*earth_distance, 0.1f*earth_speed));
+	
+	solar_system = new SolarSystem(planets, sun);
+	
 }
 
 static Location old;
@@ -124,34 +120,11 @@ void display(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-//	earth->bind();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	if (selected){
-		current.eyeX = planets[selected_planet]->x;
-		current.eyeZ = -planets[selected_planet]->z;
-		current.eyeY = selected_planet > 3 ? 0.2 : 0.15;
-	}
-	
-	gluLookAt(current.eyeX,    current.eyeY,    current.eyeZ, 
-			  current.centreX, current.centreY, current.centreZ, 
-			  current.upX,     current.upY,     current.upZ);
-	
-	
-	// Draws the objects 
-	sun->draw();
-	
-	int index = 0;
-	for(std::vector<Planet*>::iterator it = planets.begin(); it != planets.end(); ++it,++index){
-		if (render_mode == GL_RENDER){
-			if (moving) (*it)->update(); // Update the postion of the planet
-		}else{
-			glLoadName(index);          // Give the planet a name if we are picking	
-		}
-		(*it)->draw();
-	}
-	
+	solar_system->draw(render_mode, current);
+		
 	if (render_mode == GL_RENDER){
 		glutSwapBuffers();	
 	}
@@ -179,6 +152,7 @@ void reshape (int w, int h)
 }
 
 
+// figure out which planet was picked.
 // based of code from the OpenGL Programming Guide (Version 1.1)
 void process_hits(int button,GLint hits, GLuint buffer[])
 {
@@ -203,9 +177,9 @@ void process_hits(int button,GLint hits, GLuint buffer[])
 		}
 		printf ("\n");
 		
-		selected_planet = ii;
+		solar_system->selected_planet = ii;
 		if(button == GLUT_RIGHT_BUTTON){
-			planets[selected_planet]->next_material();
+			solar_system->selected_planet_next_material();
 		}
 	}
 	glutPostRedisplay();
@@ -256,24 +230,22 @@ void keyboard(unsigned char c, int x, int y)
 			
 		case 'e': // Turns the Sun's emissive colour turned on or off.
 		case 'E':
-			sun->toggle_emission();
+			solar_system->toggle_sun_emission();
 			break;
 			
 		case 'r': // Shows/hides each planet's orbit.
 		case 'R':
-			for(std::vector<Planet*>::iterator it = planets.begin(); it != planets.end(); ++it){
-				(*it)->toggle_draw_orbit();
-			}
+			solar_system->toggle_draw_orbits();
 			break;
 			
 		case ' ': // Toggles the planets moving around sun.
-			moving = !moving;
-			printf("moving:%d\n",moving);
+			solar_system->moving = !solar_system->moving;
+			printf("moving:%d\n",solar_system->moving);
 			break;
 			
 		case 'v': // Goes to the next location.
 		case 'V': 
-			selected = false;
+			solar_system->selected = false;
 			location_index = (location_index +1) % LOCATION_SIZE;
 			printf("location index:%d\n", location_index);
 			current = locations[location_index];
@@ -298,20 +270,20 @@ void keyboard(unsigned char c, int x, int y)
 			
 		case 'a': // Attaches the camera  to the currently selected planet.
 		case 'A': 
-			selected = !selected;
-			if (selected){
+			solar_system->selected = !solar_system->selected;
+			if (solar_system->selected){
 				old = current;
 			}else{
 				current = old;
 			}
-			printf("selected:%d\n",selected);
+			printf("selected:%d\n",solar_system->selected);
 			break;
 		
-		case 'm': // Change selected planet's material. 
+		case 'm': // Change selected planet's material/texture. 
 		case 'M':
-			planets[selected_planet]->next_material();
+			solar_system->selected_planet_next_material();
 			break;
-		
+			
 		case '+': // Speeds up/slows down  the planets.
 		case '=':
 			Body::speed_multiplier *=1.5f;
@@ -504,21 +476,17 @@ int main(int argc, char** argv)
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);	
-	lights[0].draw();
 	
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
-	
+	lights[0].draw();
 	
 	glEnable(GL_TEXTURE_2D);
-//	glDisable(GL_CULL_FACE);
-
-	
-	
+		
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
-	init_planets();
+	init_solar_system();
 	init_locations();
 	
 	glutMainLoop();

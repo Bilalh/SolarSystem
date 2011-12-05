@@ -16,6 +16,7 @@
 		925AC76E14884AD900485591 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 925AC76C14884AD800485591 /* Texture.cpp */; };
 		92C47EE214869C4900C0E377 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C47EE114869C4900C0E377 /* GLUT.framework */; };
 		92C47EE414869C5200C0E377 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C47EE314869C5200C0E377 /* OpenGL.framework */; };
+		92E5042E148C5DC200072643 /* SolarSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92E5042C148C5DC200072643 /* SolarSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,8 @@
 		92C47EE914869D1600C0E377 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
 		92C47EEA14869D1600C0E377 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		92C47EEB14869D1600C0E377 /* Glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Glut.h; sourceTree = "<group>"; };
+		92E5042C148C5DC200072643 /* SolarSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SolarSystem.cpp; sourceTree = "<group>"; };
+		92E5042D148C5DC200072643 /* SolarSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SolarSystem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +138,8 @@
 				925AC762148811D400485591 /* libjpeg.h */,
 				925AC76C14884AD800485591 /* Texture.cpp */,
 				925AC76D14884AD900485591 /* Texture.h */,
+				92E5042C148C5DC200072643 /* SolarSystem.cpp */,
+				92E5042D148C5DC200072643 /* SolarSystem.h */,
 			);
 			path = Practical5;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 				925AC7661488129F00485591 /* Material.cpp in Sources */,
 				925AC7391488090A00485591 /* libjpeg.c in Sources */,
 				925AC76E14884AD900485591 /* Texture.cpp in Sources */,
+				92E5042E148C5DC200072643 /* SolarSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

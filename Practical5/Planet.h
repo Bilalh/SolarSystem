@@ -6,11 +6,20 @@
 #ifndef PLANET_H
 #define PLANET_H
 
+#include <List>
+
 #include "Material.h"
 
 // Classes that represent objects in space, inculdes functions to draw the objects.
 
-class Body {
+class Drawable{
+public:
+	static void init();
+	virtual void draw() const = 0;
+	static bool textured;
+};
+
+class Body: public Drawable {
 protected:
 	MaterialList* materials;
 	const float radius;
@@ -31,6 +40,7 @@ public:
 	
 	virtual void draw() const;
 	virtual void update();
+	
 	void draw_orbit() const;
 	void toggle_draw_orbit();
 	
@@ -40,16 +50,19 @@ public:
 class Ring;
 
 class Planet: public Body{
-	Body* moon;
-	Ring* ring;
+	std::list<Drawable*> drawables; // for storing rings
+	std::list<Body*> moons;
 	
 protected:
 	virtual void draw_other() const;
 	
 public:
-	Planet(MaterialList* materials, float radius, float offset, float speed, float angle=0, Body *moon=0);
+	Planet(MaterialList* materials, float radius, float offset, float speed, float angle=0);
+	
+	void add_moon(Body *moon);
+	void add_drawables(Drawable *d);
+	
 	virtual void update();
-	void set_ring(Ring *ring);
 };
 
 
@@ -59,12 +72,12 @@ class Star: public Body{
 protected:
 	virtual void draw_material() const;	
 public:
-	Star(MaterialList* materials, const GLfloat* emission, float radius, bool show_emission=true, float offset=0, float speed=0, float angle=0);
+	Star(MaterialList* materials, const GLfloat* emission, float radius, bool show_emission=false, float offset=0, float speed=0, float angle=0);
 	void toggle_emission();
 };
 
 // For drawing rings around a planet.
-class Ring{
+class Ring : public Drawable{
 	const float inner_ring;
 	const float outer_ring;
 	const float rotate_angle;

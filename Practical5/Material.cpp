@@ -18,7 +18,7 @@ void Material::draw_with_emission(const GLfloat* emission) const
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);	
-	glMaterialfv(GL_FRONT, GL_EMISSION, emission);	
+	glMaterialfv(GL_FRONT, GL_EMISSION, emission);
 }
 
 const Material materials[] = {
@@ -115,6 +115,8 @@ const Material* Material::gold()
 	return &materials[6];
 }
 
+// Lights
+
 void Light::draw() const
 {
 	glLightfv(light_number, GL_AMBIENT, ambient);
@@ -183,6 +185,32 @@ const GLfloat* Colour::grey()
 	return colours[2];
 }
 
+
+
+// Textures
+
+static Texture textures[] ={
+	Texture("images/sunmap.jpg"     , 1000, 500,true),
+	Texture("images/mercurymap.jpg" , 1000, 500,true),
+	Texture("images/venusmap.jpg"   , 1000, 500,true),
+	Texture("images/earthmap.jpg"   , 1000, 500,true),
+	Texture("images/mars.jpg"       , 1000, 500,true),
+	Texture("images/jupitermap.jpg" , 1000, 500,true),
+	Texture("images/saturnmap.jpg"  , 1000, 500,true),
+	Texture("images/uranusmap.jpg"  , 1000, 500,true),
+	Texture("images/neptunemap.jpg" , 1000, 500,true),
+	//	Texture("images/moonmap.jpg"    , 1000, 500,true), // the moon map image is corrupt. 
+};
+
+const Texture* MaterialList::current_texture() const
+{
+	return &textures[index];
+}
+
+static bool textures_initialised = false;
+
+// MaterialList
+
 MaterialList::MaterialList(const Material* materials, const Texture*  textures, const GLfloat (*colours)[3],   size_t length, size_t index):
 materials(materials), textures(textures), length(length),index(index),colours(colours)
 {}
@@ -203,25 +231,6 @@ void MaterialList::next()
 	index = (index + 1) % length;
 }
 
-static Texture textures[] ={
-	Texture("images/sunmap.jpg"     , 1000, 500,true),
-	Texture("images/mercurymap.jpg" , 1000, 500,true),
-	Texture("images/venusmap.jpg"   , 1000, 500,true),
-	Texture("images/earthmap.jpg"   , 1000, 500,true),
-	Texture("images/mars.jpg"       , 1000, 500,true),
-	Texture("images/jupitermap.jpg" , 1000, 500,true),
-	Texture("images/saturnmap.jpg"  , 1000, 500,true),
-	Texture("images/uranusmap.jpg"  , 1000, 500,true),
-	Texture("images/neptunemap.jpg" , 1000, 500,true),
-	//	Texture("images/moonmap.jpg"    , 1000, 500,true),
-};
-
-const Texture* MaterialList::current_texture() const
-{
-	return &textures[index];
-}
-
-static bool textures_initialised = false;
 
 MaterialList* Material::all_materials(int index)
 {

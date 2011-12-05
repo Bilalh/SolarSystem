@@ -38,7 +38,7 @@ struct Material{
 	void draw_with_emission(const GLfloat* emission) const;
 };
 
-struct MaterialList{
+class MaterialList{
 	const Material* materials;
 	const GLfloat (*colours)[3];
 	const Texture* textures;
@@ -46,6 +46,7 @@ struct MaterialList{
 	size_t length;
 	size_t index;
 	
+	public:
 	const Texture*  current_texture() const; 
 	const Material* current_materials() const;
 	const GLfloat*  current_colour() const;
