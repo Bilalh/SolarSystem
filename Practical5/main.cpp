@@ -463,7 +463,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(800, 500);
-	glutCreateWindow("Practical 4");
+	glutCreateWindow("Solar System");
 	
 	glutIdleFunc(idle);
 	glutMouseFunc(mouse);
